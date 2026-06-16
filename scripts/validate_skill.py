@@ -11,11 +11,11 @@ NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 REQUIRED_FILES = [
     "SKILL.md",
     "README.md",
-    "LICENSE.txt",
     "agents/openai.yaml",
     "references/diagram-prompts.md",
     "references/quality-checklist.md",
 ]
+LICENSE_FILES = ["LICENSE", "LICENSE.md", "LICENSE.txt"]
 FORBIDDEN_PATTERNS = [
     re.compile(r"sk-[A-Za-z0-9_-]{20,}"),
     re.compile(r"ghp_[A-Za-z0-9_]{20,}"),
@@ -50,11 +50,24 @@ def parse_frontmatter(text: str) -> tuple[dict[str, str], str]:
     return data, body
 
 
+def iter_text_files(root: Path):
+    for path in root.rglob("*"):
+        if not path.is_file():
+            continue
+        if any(part in {".git", "dist", "__pycache__"} for part in path.parts):
+            continue
+        if path.suffix in {".md", ".yaml", ".yml", ".py", ".txt"} or path.name.startswith("LICENSE"):
+            yield path
+
+
 def validate(root: Path) -> None:
     for rel in REQUIRED_FILES:
         path = root / rel
         if not path.is_file():
             fail(f"Missing required file: {rel}")
+
+    if not any((root / rel).is_file() for rel in LICENSE_FILES):
+        fail(f"Missing license file. Expected one of: {', '.join(LICENSE_FILES)}")
 
     skill_text = (root / "SKILL.md").read_text(encoding="utf-8")
     frontmatter, body = parse_frontmatter(skill_text)
@@ -80,12 +93,7 @@ def validate(root: Path) -> None:
         fail("SKILL.md body exceeds 500 lines; move details into references/")
 
     combined_text = "\n".join(
-        path.read_text(encoding="utf-8", errors="ignore")
-        for path in root.rglob("*")
-        if path.is_file()
-        and ".git" not in path.parts
-        and "dist" not in path.parts
-        and path.suffix in {".md", ".yaml", ".yml", ".py", ".txt"}
+        path.read_text(encoding="utf-8", errors="ignore") for path in iter_text_files(root)
     )
     for pattern in FORBIDDEN_PATTERNS:
         if pattern.search(combined_text):
