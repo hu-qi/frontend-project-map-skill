@@ -1,0 +1,3 @@
+display_name: Frontend Project Map
+short_description: Generate a verified nine-diagram architecture map for frontend repositories.
+default_prompt: Analyze this frontend repository and generate source-grounded architecture diagrams, findings, risks, and context updates under docs/architecture/.
