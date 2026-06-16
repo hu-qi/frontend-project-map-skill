@@ -39,6 +39,15 @@ jobs:
           path: dist/frontend-project-map-skill.zip
           if-no-files-found: error
 
+      - name: Write package summary
+        run: |
+          echo "## Skill package built" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Artifact name: \`frontend-project-map-skill\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Package inside artifact: \`frontend-project-map-skill.zip\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Open this workflow run and download it from the **Artifacts** section." >> "$GITHUB_STEP_SUMMARY"
+          echo "- For a permanent release asset, push a tag such as \`v1.0.0\`." >> "$GITHUB_STEP_SUMMARY"
+
       - name: Publish release asset
         if: startsWith(github.ref, 'refs/tags/v')
         uses: softprops/action-gh-release@v2
