@@ -1,0 +1,7 @@
+MIT License
+
+Copyright (c) 2026 Hu Qi
+
+Permission is granted, free of charge, to use, copy, modify, and distribute this software and documentation, subject to inclusion of this license notice.
+
+This software is provided as is, without warranty of any kind.
