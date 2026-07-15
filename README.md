@@ -22,14 +22,15 @@ The skill emphasizes source-grounded analysis, text-first Mermaid diagrams, risk
 
 ```text
 frontend-project-map-skill/
-  SKILL.md
+  skills/frontend-project-map/
+    SKILL.md
   README.md
   LICENSE.txt
-  agents/openai.yaml
-  references/
-    diagram-prompts.md
-    quality-checklist.md
-  scripts/
+    agents/openai.yaml
+    references/
+      diagram-prompts.md
+      quality-checklist.md
+  scripts/                      # repository validation and packaging
     validate_skill.py
     build_dist.py
   .github/workflows/
