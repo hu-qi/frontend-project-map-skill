@@ -42,6 +42,10 @@ def build(root: Path) -> Path:
             if should_include(path, skill_root):
                 arcname = path.relative_to(skill_root).as_posix()
                 zf.write(path, arcname)
+        for rel in ("README.md", "LICENSE.txt"):
+            source = root / rel
+            if source.is_file():
+                zf.write(source, rel)
 
     print(f"Built {zip_path}")
     return zip_path
