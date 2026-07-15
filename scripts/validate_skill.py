@@ -10,7 +10,6 @@ from pathlib import Path
 NAME_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 REQUIRED_FILES = [
     "SKILL.md",
-    "README.md",
     "agents/openai.yaml",
     "references/diagram-prompts.md",
     "references/quality-checklist.md",
@@ -61,15 +60,16 @@ def iter_text_files(root: Path):
 
 
 def validate(root: Path) -> None:
+    skill_root = root / "skills" / "frontend-project-map"
     for rel in REQUIRED_FILES:
-        path = root / rel
+        path = skill_root / rel
         if not path.is_file():
             fail(f"Missing required file: {rel}")
 
     if not any((root / rel).is_file() for rel in LICENSE_FILES):
         fail(f"Missing license file. Expected one of: {', '.join(LICENSE_FILES)}")
 
-    skill_text = (root / "SKILL.md").read_text(encoding="utf-8")
+    skill_text = (skill_root / "SKILL.md").read_text(encoding="utf-8")
     frontmatter, body = parse_frontmatter(skill_text)
 
     allowed = {"name", "description"}
